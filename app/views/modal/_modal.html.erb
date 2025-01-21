@@ -1,0 +1,18 @@
+<div data-controller="modal">
+  <!-- Modal genérico, inicialmente oculto -->
+  <div data-modal-target="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+    <div class="relative mx-auto mt-24 w-1/3 p-6 bg-white rounded-lg shadow-lg">
+      <!-- Botón para cerrar el modal -->
+      <button
+        type="button"
+        data-action="click->modal#close"
+        class="absolute top-0 right-0 m-4 text-black font-bold text-xl"
+      >
+        ×
+      </button>
+      <div class="modal-content">
+        <%= yield %> <!-- Aquí se renderiza el contenido del modal, como el formulario de login o registro -->
+      </div>
+    </div>
+  </div>
+</div>

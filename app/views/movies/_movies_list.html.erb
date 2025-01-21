@@ -1,0 +1,14 @@
+<turbo-frame id="movies_list">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @movies.each do |movie| %>
+      <div class="p-4">
+        <div class="bg-gray-800 p-4 rounded-lg text-white">
+          <h2 class="text-xl font-semibold"><%= movie["title"] %></h2>
+          <img src="https://image.tmdb.org/t/p/w500<%= movie['poster_path'] %>" alt="<%= movie['title'] %>" class="mt-4 rounded">
+          <p class="mt-2"><%= movie["overview"].truncate(100) %></p>
+          <a href="<%= movie_path(movie["id"]) %>" class="text-blue-400 mt-2 block">View Details</a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>
