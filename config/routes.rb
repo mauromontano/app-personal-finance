@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   get "home/index"
-  # root "movies#index"
+  devise_for :users
 
-  # get "movies", to: "movies#index", as: "movies"
-  # get "movies/:id", to: "movies#show", as: "movie"
+  # Routes
+  root "home#index"
+  get "home", to: "home#index", as: "home"
 end
