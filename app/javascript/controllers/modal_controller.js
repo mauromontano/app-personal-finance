@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class extends Controller {
+export default class ModalController extends Controller {
   static targets = ["modal"];
 
-  // Abrir el modal según el id
+  // Open modal by id
   open(event) {
     const modalId = event.target.dataset.modalTarget;
     const modal = document.getElementById(modalId);
@@ -13,7 +13,7 @@ export default class extends Controller {
     }
   }
 
-  // Cerrar cualquier modal
+  // Close any modal
   close(event) {
     const modal = event.target.closest(".modal");
     modal.classList.add("hidden");
