@@ -74,5 +74,4 @@ Rails.application.configure do
   config.assets.check_precompiled_asset = false
   config.assets.compile = true
   config.assets.digest = false
-
 end
