@@ -1,4 +1,10 @@
 <nav class="bg-gray-950 flex flex-row justify-end items-center px-4 text-white" style="height: 50px;">
-  <a href="/" class="mr-4" >Inicio</a>
-  <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="mr-4">Login</button>
+  <a href="/" class="mr-4">Inicio</a>
+
+  <% if user_signed_in? %>
+    <a href="<%= authenticated_root_path %>" class="mr-4">Home</a>
+    <a href="<%= destroy_user_session_path %>" data-method="delete" class="mr-4">Logout</a>
+  <% else %>
+    <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="mr-4">Login</button>
+  <% end %>
 </nav>
