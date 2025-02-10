@@ -1,6 +1,9 @@
 <h1>Bienvenido a Finanzas Personales</h1>
-<p>Por favor, inicia sesión para acceder a la aplicacion.</p>
+<p>Por favor, inicia sesión para acceder a la aplicación.</p>
+
+<% resource = User.new %>
+<% resource_name = :user %>
 
 <%= render "modal/modal", modal_id: "loginModal" do %>
-  <%= render "modal/login_form" %>
+  <%= render "modal/login_form", resource: resource, resource_name: resource_name %>
 <% end %>

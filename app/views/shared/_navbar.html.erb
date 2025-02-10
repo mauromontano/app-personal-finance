@@ -3,7 +3,7 @@
 
   <% if user_signed_in? %>
     <a href="<%= authenticated_root_path %>" class="mr-4">Home</a>
-    <a href="<%= destroy_user_session_path %>" data-method="delete" class="mr-4">Logout</a>
+    <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "mr-4" %>
   <% else %>
     <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="mr-4">Login</button>
   <% end %>
