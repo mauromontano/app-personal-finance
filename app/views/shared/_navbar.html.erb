@@ -1,10 +1,46 @@
-<nav class="bg-gray-950 flex flex-row justify-end items-center px-4 text-white" style="height: 50px;">
-  <a href="/" class="mr-4">Inicio</a>
+<nav class="bg-gray-950 text-white px-4 flex items-center justify-between" style="height: 50px;">
 
-  <% if user_signed_in? %>
-    <a href="<%= authenticated_root_path %>" class="mr-4">Home</a>
-    <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "mr-4" %>
-  <% else %>
-    <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="mr-4">Login</button>
-  <% end %>
+  <div class="text-lg font-bold">Finanzas</div>
+
+  <div class="hidden md:flex flex-grow justify-center space-x-4">
+    <% if user_signed_in? %>
+      <%= link_to "Hoy", today_path, class: "hover:text-gray-400" %>
+      <%= link_to "Balance", balance_path, class: "hover:text-gray-400" %>
+      <%= link_to "Budget", budget_path, class: "hover:text-gray-400" %>
+    <% end %>
+  </div>
+
+  <div class="hidden md:flex">
+    <% if user_signed_in? %>
+      <div class="relative group">
+        <button class="mr-4 hover:text-gray-400">Settings ▼</button>
+        <div class="absolute hidden group-hover:block bg-gray-800 rounded-md shadow-md p-2 w-40">
+          <%= link_to "Cuenta", account_settings_path, class: "block px-4 py-2 hover:bg-gray-700" %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "block px-4 py-2 hover:bg-gray-700" %>
+        </div>
+      </div>
+    <% else %>
+      <a href="/" class="hover:text-gray-400">Inicio</a>
+      <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="ml-4 hover:text-gray-400">Login</button>
+    <% end %>
+  </div>
+
+  <div data-controller="menu">
+    <button data-action="click->menu#toggle" class="md:hidden">
+      ☰
+    </button>
+
+    <div data-menu-target="dropdown" class="absolute top-12 left-0 w-full bg-gray-900 text-white hidden md:hidden">
+      <% if user_signed_in? %>
+        <%= link_to "Hoy", today_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Balance", balance_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Budget", budget_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Cuenta", account_settings_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "block px-4 py-2 hover:bg-gray-800" %>
+      <% else %>
+        <a href="/" class="block px-4 py-2 hover:bg-gray-800">Inicio</a>
+        <button data-controller="modal" data-action="click->modal#open" data-modal-target="loginModal" class="block px-4 py-2 hover:bg-gray-800">Login</button>
+      <% end %>
+    </div>
+  </div>
 </nav>
