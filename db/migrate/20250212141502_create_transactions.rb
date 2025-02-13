@@ -5,7 +5,7 @@ class CreateTransactions < ActiveRecord::Migration[8.0]
       t.integer :transaction_type
       t.date :date
       t.string :description
-      t.boolean :recurring
+      t.boolean :recurring, default: false, null: false
       t.references :category, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
 

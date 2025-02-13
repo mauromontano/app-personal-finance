@@ -23,7 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_12_141503) do
     t.integer "transaction_type"
     t.date "date"
     t.string "description"
-    t.boolean "recurring"
+    t.boolean "recurring", default: false, null: false
     t.integer "category_id", null: false
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
