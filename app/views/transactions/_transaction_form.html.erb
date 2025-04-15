@@ -1,0 +1,59 @@
+<%= render layout: 'modal/modal', locals: { modal_id: 'newTransactionModal' } do %>
+  <div class="text-center">
+    <h2 class="text-2xl font-bold mb-6 text-white">Nueva Transacción</h2>
+    
+    <%= form_with(model: Transaction.new, data: { controller: "transaction-form", action: "submit->transaction-form#submitForm" }, class: "space-y-6") do |f| %>
+      <div class="mb-8">
+        <%= f.number_field :amount, 
+            step: "0.01", 
+            class: "w-full text-5xl font-bold text-center p-input focus:ring-emerald-500 focus:border-emerald-500 bg-gray-900 text-white border-gray-700 rounded-input", 
+            placeholder: "0.00", 
+            data: { transaction_form_target: "amount" } %>
+      </div>
+
+      <div class="flex space-x-2 mb-6 bg-gray-900/50 p-1.5 rounded-input">
+        <button type="button" 
+                class="flex-1 py-3 px-6 rounded-input text-center transition-all duration-200" 
+                data-transaction-form-target="typeTab" 
+                data-type="expense"
+                data-default-classes="bg-gray-900/50 text-gray-300 hover:bg-gray-800"
+                data-active-classes="bg-emerald-600 text-white shadow-lg">
+          Gasto
+        </button>
+        <button type="button" 
+                class="flex-1 py-3 px-6 rounded-input text-center transition-all duration-200" 
+                data-transaction-form-target="typeTab" 
+                data-type="income"
+                data-default-classes="bg-gray-900/50 text-gray-300 hover:bg-gray-800"
+                data-active-classes="bg-emerald-600 text-white shadow-lg">
+          Ingreso
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <%= f.date_field :date, 
+            class: "w-full p-input rounded-input border-gray-700 bg-gray-900 text-white shadow-sm focus:border-emerald-500 focus:ring-emerald-500 [color-scheme:dark]", 
+            value: Date.today %>
+
+        <%= f.collection_select :category_id, 
+            Category.all, :id, :name, {}, 
+            class: "w-full p-input rounded-input border-gray-700 bg-gray-900 text-white shadow-sm focus:border-emerald-500 focus:ring-emerald-500" %>
+
+        <%= f.text_area :description, 
+            class: "w-full p-input rounded-input border-gray-700 bg-gray-900 text-white shadow-sm focus:border-emerald-500 focus:ring-emerald-500", 
+            rows: 2, 
+            placeholder: "Descripción" %>
+
+        <div class="flex items-center py-2">
+          <%= f.check_box :recurring, 
+              class: "h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-700 rounded bg-gray-900" %>
+          <%= f.label :recurring, "Transacción recurrente", 
+              class: "ml-3 block text-sm text-gray-300" %>
+        </div>
+
+        <%= f.submit "Guardar", 
+            class: "w-full bg-emerald-600 text-white py-3 px-6 rounded-input hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200 shadow-lg hover:shadow-xl" %>
+      </div>
+    <% end %>
+  </div>
+<% end %> 

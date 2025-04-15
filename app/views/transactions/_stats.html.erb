@@ -1,0 +1,14 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="p-4 bg-gray-50 rounded-lg">
+    <div class="text-sm text-gray-600">Total</div>
+    <div class="text-xl font-bold"><%= number_to_currency(@total) %></div>
+  </div>
+  <div class="p-4 bg-red-50 rounded-lg">
+    <div class="text-sm text-red-600"><%= pluralize(@transactions.where("amount < 0").count, "gasto") %></div>
+    <div class="text-xl font-bold text-red-600"><%= number_to_currency(@expenses.abs) %></div>
+  </div>
+  <div class="p-4 bg-green-50 rounded-lg">
+    <div class="text-sm text-green-600"><%= pluralize(@transactions.where("amount > 0").count, "ingreso") %></div>
+    <div class="text-xl font-bold text-green-600"><%= number_to_currency(@income) %></div>
+  </div>
+</div>

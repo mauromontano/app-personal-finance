@@ -1,0 +1,9 @@
+<%= turbo_stream.update "transactions" do %>
+  <% @transactions.each do |transaction| %>
+    <%= render 'transactions/transaction', transaction: transaction %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.update "stats" do %>
+  <%= render 'transactions/stats' %>
+<% end %> 

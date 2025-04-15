@@ -8,7 +8,7 @@ class TransactionsController < ApplicationController
         # Apply period filter
         case params[:period]
         when "Hoy"
-            @transactions = @transactions.where("date >= ? AND date <= ?", Date.today.beginning_of_day, Date.today.end_of_day)
+            @transactions = @transactions.where("DATE(date) = ?", Date.today)
         when "Esta semana"
             @transactions = @transactions.where("date >= ? AND date <= ?", Date.today.beginning_of_week, Date.today.end_of_week)
         when "Este año", nil
@@ -17,13 +17,18 @@ class TransactionsController < ApplicationController
 
         # Apply search filter
         if params[:query].present?
-            @transactions = @transactions.where("description ILIKE ?", "%#{params[:query]}%")
+            @transactions = @transactions.where("lower(description) LIKE ?", "%#{params[:query].downcase}%")
         end
 
         # Calculate totals
         @total = @transactions.sum(:amount)
         @expenses = @transactions.where("amount < 0").sum(:amount)
         @income = @transactions.where("amount > 0").sum(:amount)
+
+        respond_to do |format|
+            format.html
+            format.turbo_stream
+        end
     end
 
     # GET /transactions
@@ -48,10 +53,30 @@ class TransactionsController < ApplicationController
     def create
         @transaction = current_user.transactions.build(transaction_params)
 
-        if @transaction.save
-            redirect_to @transaction, notice: 'Transaction was successfully created.'
-        else
-            render :new
+        respond_to do |format|
+            if @transaction.save
+                format.html { 
+                    flash[:notice] = 'Transacción creada exitosamente.'
+                    redirect_to finances_path 
+                }
+                format.turbo_stream { 
+                    flash.now[:notice] = 'Transacción creada exitosamente.'
+                    render turbo_stream: [
+                        turbo_stream.prepend("transactions", partial: "transactions/transaction", locals: { transaction: @transaction }),
+                        turbo_stream.update("flash", partial: "shared/flash"),
+                        turbo_stream.update("stats", partial: "transactions/stats"),
+                    ]
+                }
+            else
+                format.html { 
+                    flash[:error] = 'Error al crear la transacción.'
+                    redirect_to finances_path 
+                }
+                format.turbo_stream {
+                    flash.now[:error] = 'Error al crear la transacción.'
+                    render turbo_stream: turbo_stream.update("flash", partial: "shared/flash")
+                }
+            end
         end
     end
 
@@ -75,6 +100,6 @@ class TransactionsController < ApplicationController
     end
 
     def transaction_params
-        params.require(:transaction).permit(:amount, :date, :transaction_type, :recurring, :description, :category_id)
+        params.require(:transaction).permit(:amount, :date, :description, :recurring, :category_id, :transaction_type)
     end
 end

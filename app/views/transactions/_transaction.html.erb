@@ -1,0 +1,41 @@
+<div class="bg-blue-50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-4">
+  <!-- Desktop View -->
+  <div class="hidden md:flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="h-3 w-3 rounded-full <%= transaction.amount > 0 ? 'bg-green-400' : 'bg-red-400' %>"></div>
+      <div>
+        <div class="font-medium text-gray-900">
+          <%= transaction.description.presence || (transaction.amount > 0 ? 'Ingreso' : 'Compra') %>
+        </div>
+        <div class="text-sm text-gray-500">
+          <%= transaction.date.strftime("%d/%m/%Y") %> • 
+          <%= transaction.category&.name %> • 
+          <%= transaction.transaction_type == 'income' ? 'Ingreso' : 'Gasto' %> • 
+          <%= transaction.recurring ? 'Recurrente' : 'No recurrente' %>
+        </div>
+      </div>
+    </div>
+    <div class="font-medium <%= transaction.amount > 0 ? 'text-green-600' : 'text-red-600' %>">
+      <%= number_to_currency(transaction.amount.abs) %>
+    </div>
+  </div>
+
+  <!-- Mobile View -->
+  <div class="md:hidden">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center space-x-2">
+        <div class="h-2.5 w-2.5 rounded-full <%= transaction.amount > 0 ? 'bg-green-400' : 'bg-red-400' %>"></div>
+        <span class="text-sm text-gray-600"><%= transaction.date.strftime("%d/%m/%Y") %></span>
+      </div>
+      <div class="font-medium <%= transaction.amount > 0 ? 'text-green-600' : 'text-red-600' %>">
+        <%= number_to_currency(transaction.amount.abs) %>
+      </div>
+    </div>
+    <div class="font-medium text-gray-900 mb-1">
+      <%= transaction.description.presence || (transaction.amount > 0 ? 'Ingreso' : 'Compra') %>
+    </div>
+    <div class="text-xs text-gray-500">
+      <%= transaction.category&.name %> • <%= transaction.transaction_type == 'income' ? 'Ingreso' : 'Gasto' %>
+    </div>
+  </div>
+</div> 

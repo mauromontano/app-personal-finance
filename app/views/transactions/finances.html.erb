@@ -3,112 +3,26 @@
     <h1 class="text-2xl font-bold">Finanzas</h1>
   </div>
 
+  <!-- Flash Messages -->
+  <div id="flash">
+    <%= render 'shared/flash' %>
+  </div>
+
   <!-- Filters and Summary Section -->
   <div class="bg-white rounded-lg shadow-sm mb-6 p-4">
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center space-x-4">
-        <!-- Date Filter -->
-        <div class="relative" data-controller="dropdown">
-          <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 px-4 py-2 border rounded-lg bg-gray-50 hover:bg-gray-100">
-            <span><%= params[:period] || "Este año" %></span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-          <div data-dropdown-target="menu" class="hidden absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-            <div class="py-1" role="menu" aria-orientation="vertical">
-              <%= link_to "Este año", finances_path(period: "Este año"), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", role: "menuitem" %>
-              <%= link_to "Esta semana", finances_path(period: "Esta semana"), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", role: "menuitem" %>
-              <%= link_to "Hoy", finances_path(period: "Hoy"), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", role: "menuitem" %>
-            </div>
-          </div>
-        </div>
-
-        <!-- Search -->
-        <div class="flex-1">
-          <%= form_tag finances_path, method: :get, class: "flex items-center" do %>
-            <div class="relative flex-1">
-              <%= text_field_tag :query, params[:query], class: "w-full pl-10 pr-4 py-2 border rounded-lg", placeholder: "Buscar por descripción..." %>
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- Add Transaction Button -->
-      <%= link_to new_transaction_path, class: "inline-flex items-center px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-        </svg>
-        <span>Gasto</span>
-      <% end %>
-    </div>
-
-    <!-- Summary Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="p-4 bg-gray-50 rounded-lg">
-        <div class="text-sm text-gray-600">Total</div>
-        <div class="text-xl font-bold"><%= number_to_currency(@total) %></div>
-      </div>
-      <div class="p-4 bg-red-50 rounded-lg">
-        <div class="text-sm text-red-600"><%= pluralize(@transactions.where("amount < 0").count, "gasto") %></div>
-        <div class="text-xl font-bold text-red-600"><%= number_to_currency(@expenses.abs) %></div>
-      </div>
-      <div class="p-4 bg-green-50 rounded-lg">
-        <div class="text-sm text-green-600"><%= pluralize(@transactions.where("amount > 0").count, "ingreso") %></div>
-        <div class="text-xl font-bold text-green-600"><%= number_to_currency(@income) %></div>
-      </div>
+    <%= render 'transactions/filters' %>
+    <div id="stats">
+      <%= render 'transactions/stats' %>
     </div>
   </div>
+
+  <!-- Transaction Form Modal -->
+  <%= render 'transactions/transaction_form' %>
 
   <!-- Transactions List -->
-  <div class="space-y-3">
+  <%= turbo_frame_tag "transactions", class: "space-y-3" do %>
     <% @transactions.each do |transaction| %>
-      <div class="bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4">
-        <!-- Desktop View -->
-        <div class="hidden md:flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="h-3 w-3 rounded-full <%= transaction.amount > 0 ? 'bg-green-400' : 'bg-red-400' %>"></div>
-            <div>
-              <div class="font-medium text-gray-900">
-                <%= transaction.description.presence || (transaction.amount > 0 ? 'Ingreso' : 'Compra') %>
-              </div>
-              <div class="text-sm text-gray-500">
-                <%= transaction.date.strftime("%d/%m/%Y") %> • 
-                <%= transaction.category&.name %> • 
-                <%= transaction.transaction_type %> • 
-                <%= transaction.recurring ? 'Recurrente' : 'No recurrente' %>
-              </div>
-            </div>
-          </div>
-          <div class="font-medium <%= transaction.amount > 0 ? 'text-green-600' : 'text-red-600' %>">
-            <%= number_to_currency(transaction.amount.abs) %>
-          </div>
-        </div>
-
-        <!-- Mobile View -->
-        <div class="md:hidden">
-          <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center space-x-2">
-              <div class="h-2.5 w-2.5 rounded-full <%= transaction.amount > 0 ? 'bg-green-400' : 'bg-red-400' %>"></div>
-              <span class="text-sm text-gray-600"><%= transaction.date.strftime("%d/%m/%Y") %></span>
-            </div>
-            <div class="font-medium <%= transaction.amount > 0 ? 'text-green-600' : 'text-red-600' %>">
-              <%= number_to_currency(transaction.amount.abs) %>
-            </div>
-          </div>
-          <div class="font-medium text-gray-900 mb-1">
-            <%= transaction.description.presence || (transaction.amount > 0 ? 'Ingreso' : 'Compra') %>
-          </div>
-          <div class="text-xs text-gray-500">
-            <%= transaction.category&.name %> • <%= transaction.transaction_type %>
-          </div>
-        </div>
-      </div>
+      <%= render 'transactions/transaction', transaction: transaction %>
     <% end %>
-  </div>
+  <% end %>
 </div>

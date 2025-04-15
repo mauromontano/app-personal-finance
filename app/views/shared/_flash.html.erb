@@ -1,0 +1,11 @@
+<% if flash[:notice] %>
+  <div class="mb-4 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative" role="alert">
+    <span class="block sm:inline"><%= flash[:notice] %></span>
+  </div>
+<% end %>
+
+<% if flash[:error] %>
+  <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <span class="block sm:inline"><%= flash[:error] %></span>
+  </div>
+<% end %> 
