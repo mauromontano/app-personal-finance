@@ -31,7 +31,7 @@
       ☰
     </button>
 
-    <div data-menu-target="dropdown" class="absolute top-12 left-0 w-full bg-gray-900 text-white hidden md:hidden">
+    <div data-menu-target="dropdown" class="absolute top-12 left-0 w-full bg-gray-900 text-white hidden md:hidden z-50">
       <% if user_signed_in? %>
         <%= link_to "Hoy", today_path, class: "block px-4 py-2 hover:bg-gray-800" %>
         <%= link_to "Finanzas", finances_path, class: "block px-4 py-2 hover:bg-gray-800" %>
