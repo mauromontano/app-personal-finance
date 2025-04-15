@@ -4,7 +4,14 @@
     <h1 class="text-4xl font-bold mb-4">Maneja todas tus finanzas de la manera mas simple!</h1>
     <p class="text-lg mb-6">Por favor, inicia sesión para acceder a la aplicación.</p>
 
-    <%= button_to "Iniciar Sesión", "#", class: "px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition", data: { action: "click->modal#open", modal_target: "loginModal" } %>
+    <button
+      data-controller="modal"
+      data-action="click->modal#open"
+      data-modal-target="loginModal"
+      class="px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition"
+    >
+      Iniciar Sesión
+    </button>
   </div>
 
   <%= render "modal/modal", modal_id: "loginModal" do %>
