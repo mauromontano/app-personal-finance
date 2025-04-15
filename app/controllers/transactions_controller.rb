@@ -1,6 +1,31 @@
 class TransactionsController < ApplicationController
     before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
+    # GET /finances
+    def finances
+        @transactions = current_user.transactions
+
+        # Apply period filter
+        case params[:period]
+        when "Hoy"
+            @transactions = @transactions.where("date >= ? AND date <= ?", Date.today.beginning_of_day, Date.today.end_of_day)
+        when "Esta semana"
+            @transactions = @transactions.where("date >= ? AND date <= ?", Date.today.beginning_of_week, Date.today.end_of_week)
+        when "Este año", nil
+            @transactions = @transactions.where("date >= ? AND date <= ?", Date.today.beginning_of_year, Date.today.end_of_year)
+        end
+
+        # Apply search filter
+        if params[:query].present?
+            @transactions = @transactions.where("description ILIKE ?", "%#{params[:query]}%")
+        end
+
+        # Calculate totals
+        @total = @transactions.sum(:amount)
+        @expenses = @transactions.where("amount < 0").sum(:amount)
+        @income = @transactions.where("amount > 0").sum(:amount)
+    end
+
     # GET /transactions
     def index
         @transactions = current_user.transactions

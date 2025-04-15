@@ -5,7 +5,7 @@
   <div class="hidden md:flex flex-grow justify-center space-x-4">
     <% if user_signed_in? %>
       <%= link_to "Hoy", today_path, class: "hover:text-gray-400" %>
-      <%= link_to "Balance", balance_path, class: "hover:text-gray-400" %>
+      <%= link_to "Finanzas", finances_path, class: "hover:text-gray-400" %>
       <%= link_to "Budget", budget_path, class: "hover:text-gray-400" %>
     <% end %>
   </div>
@@ -33,8 +33,8 @@
     <div data-menu-target="dropdown" class="absolute top-12 left-0 w-full bg-gray-900 text-white hidden md:hidden">
       <% if user_signed_in? %>
         <%= link_to "Hoy", today_path, class: "block px-4 py-2 hover:bg-gray-800" %>
-        <%= link_to "Balance", balance_path, class: "block px-4 py-2 hover:bg-gray-800" %>
-        <%= link_to "Budget", budget_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Finanzas", finances_path, class: "block px-4 py-2 hover:bg-gray-800" %>
+        <%= link_to "Balance", budget_path, class: "block px-4 py-2 hover:bg-gray-800" %>
         <%= link_to "Cuenta", account_settings_path, class: "block px-4 py-2 hover:bg-gray-800" %>
         <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "block px-4 py-2 hover:bg-gray-800" %>
       <% else %>
